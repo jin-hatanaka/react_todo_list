@@ -21,10 +21,11 @@ function App() {
     });
 
   const onClickSave = () => {
-    if (todoText.trim() === '') return;
+    const text = todoText.trim();
+    if (text === '') return;
     const newTodos = [
       ...todos,
-      { id: uuidv4(), text: todoText.trim(), completed: false, edited: false },
+      { id: uuidv4(), text: text, completed: false, edited: false },
     ];
     setTodos(newTodos);
     setTodoText('');
@@ -44,23 +45,36 @@ function App() {
   };
 
   const onClickEdit = (id) => {
-    const newTodos = [...todos];
-    const todo = newTodos.find((todo) => todo.id === id);
-    todo.edited = !todo.edited;
-    setTodos(newTodos);
+    // prevTodos：現在のToDoリストの配列
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        // : 以降の todo は元の todo(オブジェクト) をそのまま返す
+        todo.id === id ? { ...todo, edited: !todo.edited } : todo
+      )
+    );
+
     setEditTodoText((prev) => ({
       ...prev,
-      [id]: todo.text,
+      [id]: todos.find((todo) => todo.id === id)?.text || '',
     }));
   };
+  // メモ
+  // ?.text の部分（オプショナルチェーン）
+  // ・find(...) の結果が undefined でなければ .text を取り出す。
+  // ・もし見つからなければエラーを出さずに undefined を返す。
+
+  // || '' の部分
+  // ・?.text が undefined や null の場合、代わりに空文字列 '' を使うという意味。
+  // ・つまり、ToDoが見つからなかった場合でも安全に空文字列が入るようにしている。
 
   const onClickSaveEdit = (id) => {
-    if (editTodoText[id].trim() === '') return;
-    const newTodos = [...todos];
-    const todo = newTodos.find((todo) => todo.id === id);
-    todo.text = editTodoText[id].trim();
-    todo.edited = false;
-    setTodos(newTodos);
+    const text = editTodoText[id].trim();
+    if (text === '') return;
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, text: text, edited: false } : todo
+      )
+    );
   };
 
   const handleClose = () => setShow(false);
