@@ -12,25 +12,25 @@ export default function TodoList({
   handleShow,
   handleClose,
   onClickDelete,
-  deleteIndex,
+  deleteId,
 }) {
   return (
     <div>
       <ListGroup className={styles.listGroup}>
-        {todos.map((todo, index) => (
-          <ListGroup.Item className={styles.listRow} key={todo.text}>
+        {todos.map((todo) => (
+          <ListGroup.Item className={styles.listRow} key={todo.id}>
             {todo.edited ? (
               <>
                 <Form.Control
                   className={styles.input}
                   type="text"
-                  value={editTodoText[index]}
-                  onChange={(e) => onChangeEditTodoText(e, index)}
+                  value={editTodoText[todo.id]}
+                  onChange={(e) => onChangeEditTodoText(e, todo.id)}
                 />
                 <Button
                   className={styles.button}
                   variant="primary"
-                  onClick={() => onClickSaveEdit(index)}
+                  onClick={() => onClickSaveEdit(todo.id)}
                 >
                   保存
                 </Button>
@@ -40,45 +40,42 @@ export default function TodoList({
                 <Form.Check
                   type="checkbox"
                   checked={todo.completed}
-                  onChange={() => onChangeComplete(index)}
+                  onChange={() => onChangeComplete(todo.id)}
                 />
                 <p className={styles.todoItem}>{todo.text}</p>
                 <Button
                   className={styles.button}
                   variant="success"
-                  onClick={() => onClickEdit(index)}
+                  onClick={() => onClickEdit(todo.id)}
                 >
                   編集
                 </Button>
                 <Button
                   className={styles.button}
                   variant="danger"
-                  onClick={() => handleShow(index)}
+                  onClick={() => handleShow(todo.id)}
                 >
                   削除
                 </Button>
               </>
             )}
-            <Modal show={show} onHide={handleClose}>
-              <Modal.Header>
-                <Modal.Title>確認画面</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>本当に削除してもよろしいですか？</Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="primary"
-                  onClick={() => onClickDelete(deleteIndex)}
-                >
-                  OK
-                </Button>
-                <Button variant="secondary" onClick={handleClose}>
-                  キャンセル
-                </Button>
-              </Modal.Footer>
-            </Modal>
           </ListGroup.Item>
         ))}
       </ListGroup>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header>
+          <Modal.Title>確認画面</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>本当に削除してもよろしいですか？</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => onClickDelete(deleteId)}>
+            OK
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            キャンセル
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

@@ -3,69 +3,70 @@ import './App.css';
 import InputTodo from './components/InputTodo';
 import TodoList from './components/TodoList';
 import TodoStatus from './components/TodoStatus';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [todoText, setTodoText] = useState('');
   const [editTodoText, setEditTodoText] = useState({});
   const [show, setShow] = useState(false);
-  const [deleteIndex, setDeleteIndex] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
 
   const onChangeTodoText = (e) => setTodoText(e.target.value);
 
-  const onChangeEditTodoText = (e, index) =>
+  const onChangeEditTodoText = (e, id) =>
     setEditTodoText({
       ...editTodoText,
-      [index]: e.target.value,
+      [id]: e.target.value,
     });
 
   const onClickSave = () => {
-    if (todoText === '') return;
+    if (todoText.trim() === '') return;
     const newTodos = [
       ...todos,
-      { text: todoText, completed: false, edited: false },
+      { id: uuidv4(), text: todoText.trim(), completed: false, edited: false },
     ];
     setTodos(newTodos);
     setTodoText('');
   };
 
-  const onClickDelete = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
+  const onClickDelete = (id) => {
+    const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
     setShow(false);
   };
 
-  const onChangeComplete = (index) => {
+  const onChangeComplete = (id) => {
     const newTodos = [...todos];
-    const todo = newTodos[index];
+    const todo = newTodos.find((todo) => todo.id === id);
     todo.completed = !todo.completed;
     setTodos(newTodos);
   };
 
-  const onClickEdit = (index) => {
+  const onClickEdit = (id) => {
     const newTodos = [...todos];
-    const todo = newTodos[index];
+    const todo = newTodos.find((todo) => todo.id === id);
     todo.edited = !todo.edited;
     setTodos(newTodos);
     setEditTodoText((prev) => ({
       ...prev,
-      [index]: todo.text,
+      [id]: todo.text,
     }));
   };
 
-  const onClickSaveEdit = (index) => {
-    if (editTodoText[index] === '') return;
+  const onClickSaveEdit = (id) => {
+    if (editTodoText[id].trim() === '') return;
     const newTodos = [...todos];
-    newTodos[index].text = editTodoText[index];
-    newTodos[index].edited = false;
+    const todo = newTodos.find((todo) => todo.id === id);
+    todo.text = editTodoText[id].trim();
+    todo.edited = false;
     setTodos(newTodos);
   };
 
   const handleClose = () => setShow(false);
-  const handleShow = (index) => {
+  const handleShow = (id) => {
     setShow(true);
-    setDeleteIndex(index);
+    setDeleteId(id);
   };
 
   return (
@@ -87,7 +88,7 @@ function App() {
         handleShow={handleShow}
         handleClose={handleClose}
         onClickDelete={onClickDelete}
-        deleteIndex={deleteIndex}
+        deleteId={deleteId}
       />
       <TodoStatus todos={todos} />
     </div>
