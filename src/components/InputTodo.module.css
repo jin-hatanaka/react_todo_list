@@ -1,0 +1,13 @@
+.inputArea {
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 280px;
+}
+
+.button {
+  padding: 6px 12px;
+  margin: 0 2px;
+}

@@ -1,0 +1,24 @@
+.listGroup {
+  width: 380px;
+  margin: 20px 0;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 280px;
+}
+
+.button {
+  padding: 6px 12px;
+  margin: 0 2px;
+}
+
+.todoItem {
+  margin-bottom: 0;
+  margin-right: auto;
+  margin-left: 5px;
+}
