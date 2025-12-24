@@ -4,10 +4,10 @@ React のコンポーネント設計や状態管理（useState など）を活�
 タスクを追加・完了・編集・削除できる基本的な機能を実装しています。
 
 ## 使用技術
-- React
-- JavaScript
+- React 19
+- JavaScript（ES6+）
 - CSS
-- Bootstrap
+- Bootstrap 5
 - npm / Node.js
 
 ## 機能一覧
